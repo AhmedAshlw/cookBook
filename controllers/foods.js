@@ -6,8 +6,8 @@ const User = require('../models/user')
 router.get('/', async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id)
-    res.render('applications/index.ejs', {
-      applications: currentUser.applications,
+    res.render('foods/index.ejs', {
+      foods: currentUser.foods,
     })
   } catch (error) {
     console.log(error)
@@ -16,28 +16,27 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/new', async (req, res) => {
-  res.render('applications/new.ejs')
+  res.render('foods/new.ejs')
 })
 
 router.post('/', async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id)
-    req.body.date = new Date(req.body.date)
-    currentUser.applications.push(req.body)
+    currentUser.foods.push(req.body)
     await currentUser.save()
-    res.redirect(`/users/${currentUser._id}/applications`)
+    res.redirect(`/users/${currentUser._id}/foods`)
   } catch (error) {
     console.log(error)
     res.redirect('/')
   }
 })
 
-router.get('/:applicationId', async (req, res) => {
+router.get('/:foodsId', async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id)
-    const application = currentUser.applications.id(req.params.applicationId)
-    res.render('applications/show.ejs', {
-      application,
+    const food = currentUser.foods.id(req.params.foodsId)
+    res.render('foods/show.ejs', {
+      food,
     })
   } catch (error) {
     console.log(error)
@@ -45,29 +44,44 @@ router.get('/:applicationId', async (req, res) => {
   }
 })
 
-router.delete('/:applicationId', async (req, res) => {
+router.delete('/:foodsId', async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id)
-    currentUser.applications.id(req.params.applicationId).deleteOne()
+    currentUser.foods.id(req.params.foodsId).deleteOne()
     await currentUser.save()
-    res.redirect(`/users/${currentUser._id}/applications`)
+    res.redirect(`/users/${currentUser._id}/foods`)
   } catch (error) {
     console.log(error)
     res.redirect('/')
   }
 })
 
-router.get('/:applicationId/edit', async (req, res) => {
+router.get('/:foodsId/edit', async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id)
-    const application = currentUser.applications.id(req.params.applicationId)
-    res.render('applications/edit.ejs', {
-      application,
-    })
+    const food = currentUser.foods.id(req.params.foodsId)
+    res.render('foods/edit.ejs', { food })
   } catch (error) {
     console.log(error)
     res.redirect('/')
   }
 })
+
+router.put('/:foodsId', async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.session.user._id);
+    const food = currentUser.foods.id(req.params.foodsId);
+
+    food.set(req.body);
+    await currentUser.save();
+
+    res.redirect(
+      `/users/${currentUser._id}/foods/${req.params.foodsId}`
+    );
+  } catch (error) {
+    console.log(error);
+    res.redirect('/')
+  }
+});
 
 module.exports = router

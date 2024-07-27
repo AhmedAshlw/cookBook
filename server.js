@@ -12,8 +12,9 @@ const isSignedIn = require('./middleware/is-signed-in.js')
 const passUserToView = require('./middleware/pass-user-to-view.js')
 
 // CONTROLLERS
-const applicationsCtrl = require('./controllers/applications.js')
 const authController = require('./controllers/auth.js');
+const foodsController = require('./controllers/foods.js');
+const usersController = require('./controllers/users.js');
 
 const port = process.env.PORT ? process.env.PORT : '3000';
 
@@ -34,23 +35,24 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(passUserToView)
 
 // LINK TO PUBLIC DIRECTORY
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
   if (req.session.user) {
-    res.redirect(`/users/${req.session.user._id}/applications`)
+    res.redirect(`/users/${req.session.user._id}/foods`)
   } else {
     res.render('index.ejs')
   }
 });
 
-
+app.use(passUserToView)
 app.use('/auth', authController);
-app.use(isSignedIn)
-app.use('/users/:userId/applications', applicationsCtrl)
+app.use(isSignedIn);
+app.use('/users/:userId/foods',foodsController);
+app.use('/users/:userId/users',usersController);
+
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
