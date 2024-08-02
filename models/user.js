@@ -1,10 +1,5 @@
-const mongoose = require('mongoose');
-
-const foodSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  }
-});
+const mongoose = require("mongoose");
+const foodSchema = require("./food").schema;
 
 const userSchema = mongoose.Schema({
   username: {
@@ -15,9 +10,9 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  foods: [foodSchema]
+  foods: [foodSchema],
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

@@ -1,22 +1,23 @@
-const express = require('express')
-const Community = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const User = require('../models/user')
+const User = require("../models/user");
+const Food = require("../models/food");
 
-Community.get('/index', async (req, res) => {
-    const users = await User.find({});
-    res.render('users/index.ejs', { users })
-})
+router.get("/", async (req, res) => {
+  const users = await User.find();
+  res.render("users/index.ejs", { users });
+});
 
-router.get('/:userId/users/:foodId', async (req, res) => {
+router.get("/:foodsId", async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
-    const food = currentUser.foods.id(req.params.foodsId)
-    res.render('users/show.ejs', { user, food })
+    const currentUser = await User.findById(req.session.user._id);
+    const foods = currentUser.foods.id(req.params.foodsId);
+    res.render("users/show.ejs", { foods: currentUser.foods });
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-}) //IT DIDN'T WORK .. I tried alot of possibilities
+});
 
-module.exports = Community
+module.exports = router;

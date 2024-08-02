@@ -1,73 +1,75 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const User = require('../models/user')
+const User = require("../models/user");
+const Food = require("../models/food");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.session.user._id)
-    res.render('foods/index.ejs', {
+    const currentUser = await User.findById(req.session.user._id);
+    res.render("foods/index.ejs", {
       foods: currentUser.foods,
-    })
+    });
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-})
+});
 
-router.get('/new', async (req, res) => {
-  res.render('foods/new.ejs')
-})
+router.get("/new", async (req, res) => {
+  res.render("foods/new.ejs");
+});
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.session.user._id)
-    currentUser.foods.push(req.body)
-    await currentUser.save()
-    res.redirect(`/users/${currentUser._id}/foods`)
+    const currentUser = await User.findById(req.session.user._id);
+    const newFood = await Food.create(req.body);
+    currentUser.foods.push(newFood);
+    await currentUser.save();
+    res.redirect(`/users/${currentUser._id}/foods`);
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-})
+});
 
-router.get('/:foodsId', async (req, res) => {
+router.get("/:foodsId", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.session.user._id)
-    const food = currentUser.foods.id(req.params.foodsId)
-    res.render('foods/show.ejs', {
+    const currentUser = await User.findById(req.session.user._id);
+    const food = currentUser.foods.id(req.params.foodsId);
+    res.render("foods/show.ejs", {
       food,
-    })
+    });
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-})
+});
 
-router.delete('/:foodsId', async (req, res) => {
+router.delete("/:foodsId", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.session.user._id)
-    currentUser.foods.id(req.params.foodsId).deleteOne()
-    await currentUser.save()
-    res.redirect(`/users/${currentUser._id}/foods`)
+    const currentUser = await User.findById(req.session.user._id);
+    currentUser.foods.id(req.params.foodsId).deleteOne();
+    await currentUser.save();
+    res.redirect(`/users/${currentUser._id}/foods`);
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-})
+});
 
-router.get('/:foodsId/edit', async (req, res) => {
+router.get("/:foodsId/edit", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.session.user._id)
-    const food = currentUser.foods.id(req.params.foodsId)
-    res.render('foods/edit.ejs', { food })
+    const currentUser = await User.findById(req.session.user._id);
+    const food = currentUser.foods.id(req.params.foodsId);
+    res.render("foods/edit.ejs", { food });
   } catch (error) {
-    console.log(error)
-    res.redirect('/')
+    console.log(error);
+    res.redirect("/");
   }
-})
+});
 
-router.put('/:foodsId', async (req, res) => {
+router.put("/:foodsId", async (req, res) => {
   try {
     const currentUser = await User.findById(req.session.user._id);
     const food = currentUser.foods.id(req.params.foodsId);
@@ -75,13 +77,11 @@ router.put('/:foodsId', async (req, res) => {
     food.set(req.body);
     await currentUser.save();
 
-    res.redirect(
-      `/users/${currentUser._id}/foods/${req.params.foodsId}`
-    );
+    res.redirect(`/users/${currentUser._id}/foods/${req.params.foodsId}`);
   } catch (error) {
     console.log(error);
-    res.redirect('/')
+    res.redirect("/");
   }
 });
 
-module.exports = router
+module.exports = router;

@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-    <title>My Pantry</title>
-  </head>
-  <body>
-    <%- include('../partials/_navbar.ejs') %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <title>My Pantry</title>
+</head>
+
+<body>
+  <%- include('../partials/_navbar.ejs') %>
     <h1>Welcome to my Pantry</h1>
 
-    
-    <a href="/users/<%= user._id %>/users/index">Explore Our Community</a>
+
+    <a href="/users/<%= user._id %>/users/">Explore Our Community</a>
     <a href="/users/<%= user._id %>/foods/new">Add an Item</a>
 
     <ul>
-      <% foods.forEach( (food) => { %>
-      <li>
-        <a href="/users/<%= user._id %>/foods/<%= food._id %>">
-          <%= food.name %> 
-        </a>
-      </li>
-      <% }) %>
+      <% foods.forEach( (food)=> { %>
+        <li>
+          <a href="/users/<%= user._id %>/foods/<%= food._id %>">
+            <%= food.name %>
+          </a>
+        </li>
+        <% }) %>
     </ul>
-  </body>
-</html>
+</body>
 
+</html>
